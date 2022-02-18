@@ -8,41 +8,44 @@ import { HttpClient } from '@angular/common/http';
 })
 export class CadernoService {
 
-  constructor(private request: HttpClient) { //Injeção de Dependência. para requisitar a API.
+  private uri: string = "https://localhost:44393/api/cadernos/";
+
+  constructor(private httpClient: HttpClient) { //Injeção de Dependência. para requisitar a API.//httpClient é uma requisição.
     console.log("CadernoService.constructor");
   }
 
-  getAll():Observable<Caderno[]>{ // metodo server.
-    console.log("CadernoService.getAll")
-    const endpoint: string ="https://localhost:44393/api/cadernos";
-    return this.request.get<Caderno[]>(endpoint);
+  getAll():Observable<Caderno[]> { // metodo server.
+    console.log("CadernoService.getAll-start");
+    //const endpoint: string ="https://localhost:44393/api/cadernos";
+    return this.httpClient.get<Caderno[]>(this.uri);
   }
 
-  post(caderno: Caderno):Observable<Caderno>{
-    console.log("CadernoService.post");
-    const endpoint: string = "https://localhost:44393/api/cadernos";
-    return this.request.post<Caderno>(endpoint, caderno);
-
+  getById(id: number): Observable<Caderno> {
+    console.log("CadernoService.getById-start");
+    const uri: string = `${this.uri}${id}`;
+    return this.httpClient.get<Caderno>(uri);
   }
 
-   delete(id: number):Observable<Caderno>{
-    console.log("CadernoService.delete");
-    const endpoint: string = "https://localhost:44393/api/cadernos/" + id;
-    return this.request.delete<Caderno>(endpoint);
+  getByTitulo(titulo: string): Observable<Caderno[]> {
+    console.log("CadernoService.getByTitulo-start");
+    const uri: string = `${this.uri}?titulo=${titulo}`;
+    return this.httpClient.get<Caderno[]>(uri);
+  }
 
-   }
+  put(caderno: Caderno): Observable<Caderno> {
+    console.log("CadernoService.put-start");
+    //const uri: string = `${this.uri}${caderno.Id}`;
+    const uri: string = this.uri + caderno.Id;
+    return this.httpClient.put<Caderno>(uri, caderno);
+  }
 
-   put(id: number):Observable<Caderno>{
-    console.log("CadernoService.put");
-    const endpoint: string = "https://localhost:44393/api/cadernos/" + id;
-    return this.request.put<Caderno>(endpoint, id);
-
+  post(caderno: Caderno): Observable<Caderno> {
+    console.log("CadernoService.post-start");
+    return this.httpClient.post<Caderno>(this.uri, caderno);
   }
   
-   Put(id: number, caderno: Caderno): Observable<Caderno>{
-    const endpoint: string = "https://localhost:44393/api/cadernos/" + id
-    console.log(endpoint)
-    return this.request.put<Caderno>((endpoint + (id)), caderno)
+  delete(id: number): Observable<Caderno> {
+    console.log("CadernoService.delete");
+    return this.httpClient.delete<Caderno>(this.uri + id);
   }
-
 }

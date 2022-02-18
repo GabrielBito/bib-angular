@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { take } from 'rxjs';
 import { Caderno } from 'src/app/models/caderno.models';
 import { CadernoService } from 'src/app/services/caderno/caderno.service';
 
@@ -12,35 +13,46 @@ export class CadernoEditComponent implements OnInit {
    
   caderno: Caderno;
 
-  constructor(private router: ActivatedRoute, private cadernoService: CadernoService) { 
+  constructor(private activateRoute: ActivatedRoute, 
+    private cadernoService: CadernoService,
+    private router: Router ) { 
     console.log("CadernoEditComponent-construtor")
     this.caderno= new Caderno();
   }
 
   ngOnInit(): void {
-    const id: number = Number(this.router.snapshot.paramMap.get("idparam"));
-    console.log(id);
+    console.log("CadernoEditComponent-ngOnInit");
+    const id: number = Number(this.activateRoute.snapshot.paramMap.get("id")); //(this.activateRoute.snapshot.params["id"]);
+    console.log("id = " + id);
+    this.getById(id);
+  }
 
-    //service getById
-
-    //carregar os dados do caderno no objetivo this.caderno
-
-    //utilizar o ngModel para o databind de mão dupla com o objeto caderno
+  getById(id: number): void {
+    console.log("CadernoEditComponent-getById-start");
+    this.cadernoService.getById(id)
+     .pipe(
+       take(1) // ou first ele executa apenas 1 vez o take pode ser 2, 3 ...
+     )
+     .subscribe(data => {
+       this.caderno = data;
+       console.log("Dados do caderno:" + this.caderno.Titulo);
+     });
+    console.log("CadernoEditComponent-getById-end");
   }
   
   goToIndex(): void {
-    
+    this.router.navigateByUrl("cadernos/caderno-index");
   }
 
-  put(id: number): void{
-    console.log();
-    this.cadernoService.put(id).subscribe();
-    console.log();
-
-    // service put
-
-    //redirecionar para index
-
+  edit(): void {
+    console.log("CadernoEditComponent-edit-start");
+    this.cadernoService.put(this.caderno)
+     .pipe(
+       take(1) // ou first ele executa apenas 1 vez o take pode ser 2, 3 ...
+     )
+     .subscribe(() => {
+       this.goToIndex();
+     });
+    console.log("CadernoEditComponent-edit-end");
   }
-
 }

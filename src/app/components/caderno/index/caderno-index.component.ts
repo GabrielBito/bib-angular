@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { take } from 'rxjs';
 import { Caderno } from 'src/app/models/caderno.models';
 import { CadernoService } from 'src/app/services/caderno/caderno.service';
 
@@ -10,11 +11,16 @@ import { CadernoService } from 'src/app/services/caderno/caderno.service';
 })
 export class CadernoIndexComponent implements OnInit {
 
-  caderno: Caderno[]; // Array de cadernos. neste momento ele está vazio. // PORQUE PRECISSO FAZER UMA INTERPOLAÇÃO.
+  cadernos: Caderno[]; // Array de cadernos. neste momento ele está vazio. // PORQUE PRECISSO FAZER UMA INTERPOLAÇÃO.
+
+  searchId: string;
+  searchTitulo: string;
 
   constructor( private router: Router, private cadernoService: CadernoService) { 
     console.log("CadernoIndexComponent.constructor");
-    this.caderno = new Array<Caderno>();
+    this.cadernos = new Array<Caderno>();
+    this.searchId = "";
+    this.searchTitulo = "";
   }
 
   ngOnInit(): void {
@@ -22,46 +28,81 @@ export class CadernoIndexComponent implements OnInit {
   }
 
   goToCreate(): void {
-      //document.location = "caderno-create";
-      this.router.navigateByUrl("caderno-create")
+    //document.location = "caderno-create";
+    this.router.navigateByUrl("cadernos/caderno-create");
+  }
+
+  clearList(): void {
+    this.cadernos = [];
+  }
+
+  get(): void {
+    console.log("CadernoIndexComponent.get");
+    console.log("searchId = " + this.searchId);
+    console.log("searchTitulo = " + this.searchTitulo);
+
+    this.clearList();
+
+    if (this.searchId !== "") {
+      const id: number = Number(this.searchId);
+      this.getById(id);
+      return;
+    }
+
+    if (this.searchTitulo !== "") {
+      this.getByTitulo(this.searchTitulo);
+      return;
+    }
+
+    this.getAll();
+  }
+
+  getById(id: number): void {
+    console.log("CadernoIndexComponent-getById-start");
+    this.cadernoService.getById(id)
+      .pipe(
+        take(1)
+      )
+      .subscribe(data => {
+        console.log(data);
+        if (data != null)
+          this.cadernos.push(data);
+      });
+    console.log("CadernoIndexComponent-gertById-end");
+  }
+
+  getByTitulo(titulo: string): void {
+    console.log("CadernoIndexComponent.getByTitulo-start");
+    this.cadernoService.getByTitulo(titulo)
+      .subscribe(cadernos => {
+        this.cadernos = cadernos;
+      });
+    console.log(this.cadernos);
+    console.log("CadernoIndexComponent.getByTitulo-end");
   }
   
-  goToEdit(id: number) {
-    this.router.navigate(["caderno-edit", { idparam: id }]);
-  }
-
-  // goToEdit(id: number): void{
-  //   this.cadernoService.Put(id, this.caderno)
-  //   this.router.navigateByUrl("caderno-edit")
-  //   console.log(this.caderno)
-  //   console.log(id)
-  // }
-
-  //goToEdit(id:number):void{
-    //console.log(id);
-    //this.cadernoService.put(id, this.cadernos)
-    //this.router.navigateByUrl("caderno-edit");
-    //const endpoint: string = "https://localhost:44393/api/cadernos/"+ id;
-    //console.log(endpoint);
-  //} 
-
   getAll(): void {
     console.log("CadernoIndexComponent.getAll-start");// ai ele chama o getAll
     this.cadernoService.getAll()
-    .subscribe((data) => { // ai ele preenche [...] //subscribe( inscrição no metodo get para receber seu retorno no momento apropiado) aguarda o retorno cadernos.  data(variável escolhida para "receber a lista de cadernos" que o enpoint vai responder). 
-      this.caderno = data;
-      console.log("RESPOSTA CHEGOU AGORA:");
-      console.log(this.caderno);
+    .subscribe(cadernos => { // ai ele preenche [...] //subscribe( inscrição no metodo get para receber seu retorno no momento apropiado) aguarda o retorno cadernos.  data(variável escolhida para "receber a lista de cadernos" que o enpoint vai responder). 
+      this.cadernos = cadernos;
+      console.log("Resposta chegou agora:");
+      console.log(this.cadernos);
     });
-    console.log(this.caderno);
+    console.log(this.cadernos);
     console.log("CadernoIndexComponent.getAll-end");
   }
 
+  goToEdit(id: number): void {
+    this.router.navigate(["cadernos/caderno-edit", id]);
+  }
+
   delete(id: number): void {
-    console.log("Deletar o caderno ");
-    if (confirm("Deseja deletar esse caderno?")){
-      this.cadernoService.delete(id).subscribe();
-      this.getAll();
-    }
+    console.log("CadernoIndexComponent.delete")
+    console.log("Id =" + id);
+    this.cadernoService.delete(id)
+     .subscribe(() => {
+       this.get();
+     });
   }
 }

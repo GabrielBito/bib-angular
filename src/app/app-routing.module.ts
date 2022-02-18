@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CadernoCreateComponent } from './components/caderno/create/caderno-create.component';
-import { CadernoEditComponent } from './components/caderno/edit/caderno-edit.component';
-import { CadernoIndexComponent } from './components/caderno/index/caderno-index.component';
+import { HomeComponent } from './components/home/home.component';
 
 const routes: Routes = [
-  { path: 'caderno-index', component: CadernoIndexComponent },
-  { path: 'caderno-create', component: CadernoCreateComponent },
-  { path: 'caderno-edit', component: CadernoEditComponent }
+  { path: '', pathMatch:'full', redirectTo: 'home' },
+  { path: 'home', component: HomeComponent },
+  { path: 'cadernos', 
+     loadChildren:()=> import('./components/caderno/caderno.module').then(c => c.CadernoModule) 
+  },
+  { path:'doces',
+     loadChildren:()=> import('./components/doce/doce.module').then(d => d.DoceModule)
+  }
 ];
 
 @NgModule({
