@@ -22,7 +22,7 @@ export class CadernoEditComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("CadernoEditComponent-ngOnInit");
-    const id: number = Number(this.activateRoute.snapshot.paramMap.get("id")); //(this.activateRoute.snapshot.params["id"]);
+    const id: number = Number(this.activateRoute.snapshot.paramMap.get("id"));
     console.log("id = " + id);
     this.getById(id);
   }
@@ -31,7 +31,7 @@ export class CadernoEditComponent implements OnInit {
     console.log("CadernoEditComponent-getById-start");
     this.cadernoService.getById(id)
      .pipe(
-       take(1) // ou first ele executa apenas 1 vez o take pode ser 2, 3 ...
+       take(1)
      )
      .subscribe(data => {
        this.caderno = data;
@@ -48,7 +48,7 @@ export class CadernoEditComponent implements OnInit {
     console.log("CadernoEditComponent-edit-start");
     this.cadernoService.put(this.caderno)
      .pipe(
-       take(1) // ou first ele executa apenas 1 vez o take pode ser 2, 3 ...
+       take(1)
      )
      .subscribe(() => {
        this.goToIndex();

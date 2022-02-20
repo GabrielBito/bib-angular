@@ -10,13 +10,12 @@ export class CadernoService {
 
   private uri: string = "https://localhost:44393/api/cadernos/";
 
-  constructor(private httpClient: HttpClient) { //Injeção de Dependência. para requisitar a API.//httpClient é uma requisição.
+  constructor(private httpClient: HttpClient) {
     console.log("CadernoService.constructor");
   }
 
-  getAll():Observable<Caderno[]> { // metodo server.
+  getAll():Observable<Caderno[]> {
     console.log("CadernoService.getAll-start");
-    //const endpoint: string ="https://localhost:44393/api/cadernos";
     return this.httpClient.get<Caderno[]>(this.uri);
   }
 
@@ -34,7 +33,6 @@ export class CadernoService {
 
   put(caderno: Caderno): Observable<Caderno> {
     console.log("CadernoService.put-start");
-    //const uri: string = `${this.uri}${caderno.Id}`;
     const uri: string = this.uri + caderno.Id;
     return this.httpClient.put<Caderno>(uri, caderno);
   }

@@ -8,7 +8,6 @@ import { CadernoEditComponent } from './edit/caderno-edit.component';
 import { FormsModule } from '@angular/forms';
 
 
-
 @NgModule({ 
   declarations: [
     CadernoCreateComponent,

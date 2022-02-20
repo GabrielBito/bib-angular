@@ -33,7 +33,7 @@ export class CadernoCreateComponent implements OnInit {
     console.log("CadernoEditComponent-edit-start");
     this.cadernoService.post(this.caderno)
       .pipe(
-        take(1) // ou first ele executa apenas 1 vez o take pode ser 2, 3 ...
+        take(1)
       )
       .subscribe(data =>{
         this.caderno = data;

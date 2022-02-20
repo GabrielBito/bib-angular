@@ -10,6 +10,9 @@ const routes: Routes = [
   },
   { path:'doces',
      loadChildren:()=> import('./components/doce/doce.module').then(d => d.DoceModule)
+  },
+  { path:'gibis',
+     loadChildren:()=> import('./components/gibi/gibi.module').then(d => d.GibiModule)
   }
 ];
 

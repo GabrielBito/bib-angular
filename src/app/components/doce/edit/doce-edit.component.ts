@@ -22,7 +22,7 @@ export class DoceEditComponent implements OnInit {
 
   ngOnInit(): void {
     console.log("DoceEditComponent-ngOnInit");
-    const id: number = Number(this.activateRoute.snapshot.paramMap.get("id")); //(this.activateRoute.snapshot.params["id"]);
+    const id: number = Number(this.activateRoute.snapshot.paramMap.get("id")); 
     console.log("id = " + id);
     this.getById(id);
   }
@@ -31,7 +31,7 @@ export class DoceEditComponent implements OnInit {
     console.log("DoceEditComponent-getById-start");
     this.doceService.getById(id)
      .pipe(
-       take(1) // ou first ele executa apenas 1 vez o take pode ser 2, 3 ...
+       take(1)
      )
      .subscribe(data => {
        this.doce = data;
@@ -48,7 +48,7 @@ export class DoceEditComponent implements OnInit {
     console.log("DoceEditComponent-edit-start");
     this.doceService.put(this.doce)
      .pipe(
-       take(1) // ou first ele executa apenas 1 vez o take pode ser 2, 3 ...
+       take(1)
      )
      .subscribe(() => {
        this.goToIndex();

@@ -25,13 +25,7 @@ export class DoceService {
     console.log(uri);
     return this.httpClient.get<Doce>(uri);
   }
-
-  // getById(id: number): Observable<Doce> {
-  //   console.log("DoceService.getById-start");
-  //   const uri: string = `${this.uri}${id}`;
-  //   return this.httpClient.get<Doce>(uri);
-  // }
-
+  
   getByDescricao(descricao: string): Observable<Doce[]> {
     console.log("DoceService.getByDescricao-start");
     const uri: string = `${this.uri}?descricao=${descricao}`;
